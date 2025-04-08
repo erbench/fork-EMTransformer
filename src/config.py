@@ -3,10 +3,11 @@ import json
 import os
 import logging
 
-from pytorch_transformers import BertConfig, BertForSequenceClassification, BertTokenizer, XLNetTokenizer, \
+from transformers import BertConfig, BertForSequenceClassification, BertTokenizer, XLNetTokenizer, \
     XLNetForSequenceClassification, XLNetConfig, XLMForSequenceClassification, XLMConfig, XLMTokenizer, \
     RobertaTokenizer, RobertaForSequenceClassification, RobertaConfig, DistilBertConfig, \
     DistilBertForSequenceClassification, DistilBertTokenizer
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
 
 from logging_customized import setup_logging
 
@@ -19,7 +20,8 @@ class Config():
 
     MODEL_CLASSES = {
         'bert': (BertConfig, BertForSequenceClassification, BertTokenizer),
-        'xlnet': (XLNetConfig, XLNetForSequenceClassification, XLNetTokenizer),
+        'xlnet': (None, AutoModelForSequenceClassification, AutoTokenizer),
+        #'xlnet': (XLNetConfig, XLNetForSequenceClassification, XLNetTokenizer),
         'xlm': (XLMConfig, XLMForSequenceClassification, XLMTokenizer),
         'roberta': (RobertaConfig, RobertaForSequenceClassification, RobertaTokenizer),
         'distilbert': (DistilBertConfig, DistilBertForSequenceClassification, DistilBertTokenizer),
