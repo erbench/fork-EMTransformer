@@ -5,7 +5,7 @@ from sklearn.metrics import f1_score, classification_report
 from tqdm import tqdm
 
 
-def predict(model, device, test_data_loader):
+def predict(model, device, test_data_loader, model_type):
     nb_prediction_steps = 0
     predictions = None
     labels = None
@@ -17,8 +17,10 @@ def predict(model, device, test_data_loader):
         with torch.no_grad():
             inputs = {'input_ids': batch[0],
                       'attention_mask': batch[1],
-                      'token_type_ids': batch[2],
                       'labels': batch[3]}
+
+            if model_type != 'distilbert':
+                inputs['token_type_ids'] = batch[2] if model_type in ['bert', 'xlnet'] else None  # XLM, DistilBERT and RoBERTa don't use segment_ids
 
             outputs = model(**inputs)
             _, logits = outputs[:2]
@@ -36,8 +38,8 @@ def predict(model, device, test_data_loader):
     # for a simple classification this is also not necessary, we just take the index of the neuron with the maximal output.
     predicted_class = np.argmax(predictions, axis=1)
 
-    simple_accuracy = (predicted_class == labels).mean()
-    f1 = f1_score(y_true=labels, y_pred=predicted_class)
+    #simple_accuracy = (predicted_class == labels).mean()
+    #f1 = f1_score(y_true=labels, y_pred=predicted_class)
     report = classification_report(labels, predicted_class)
 
-    return simple_accuracy, f1, report, pd.DataFrame({'predictions': predicted_class, 'labels': labels})
+    return report, pd.DataFrame({'predictions': predicted_class, 'labels': labels}), predictions

@@ -10,6 +10,16 @@ from logging_customized import setup_logging
 
 setup_logging()
 
+def get_f1pr(y_true, y_pred):
+    num_candidates = np.sum(y_pred)
+    num_matches = np.sum(y_true)
+    tp = np.sum(y_true * y_pred)
+    recall = tp / num_matches
+    precision = tp / num_candidates
+    f1 = 2 * precision * recall / (precision + recall)
+    return f1, precision, recall
+
+
 
 class Evaluation:
 
@@ -59,12 +69,14 @@ class Evaluation:
         predicted_class = np.argmax(predictions, axis=1)
 
         simple_accuracy = (predicted_class == labels).mean()
-        f1 = f1_score(y_true=labels, y_pred=predicted_class)
+        f1, prec, rec = get_f1pr(y_true=labels, y_pred=predicted_class)
         report = classification_report(labels, predicted_class)
 
         result = {'eval_loss': eval_loss,
                   'simple_accuracy': simple_accuracy,
-                  'f1_score': f1}
+                  'f1': f1,
+                  'precision': prec,
+                  'recall': rec}
 
         with open(self.output_path, "a+") as writer:
             tqdm.write("***** Eval results after epoch {} *****".format(epoch))

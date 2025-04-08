@@ -1,7 +1,7 @@
 import os
 
-from pytorch_transformers import BertTokenizer
-from pytorch_transformers.modeling_bert import BertForSequenceClassification
+from transformers import BertTokenizer
+from transformers import BertForSequenceClassification
 
 
 def save_model(model, experiment_name, model_output_dir, epoch=None, tokenizer=None):
