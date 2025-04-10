@@ -75,7 +75,7 @@ def train(device,
         f1 = eval_results['f1']
         t_eval = time.process_time()
         if type(testing) != type(None):
-            eval_results = evaluation.evaluate(model, device, epoch)
+            eval_results = testing.evaluate(model, device, epoch)
         t_test = time.process_time()
         curr_results = [epoch, eval_results['f1'], eval_results['precision'], eval_results['recall'], t_train - t_epoch, t_eval - t_train, t_test - t_eval]
         results += [curr_results]

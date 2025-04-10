@@ -68,8 +68,10 @@ class Evaluation:
         # for a simple classification this is also not necessary, we just take the index of the neuron with the maximal output.
         predicted_class = np.argmax(predictions, axis=1)
 
+
         simple_accuracy = (predicted_class == labels).mean()
         f1, prec, rec = get_f1pr(y_true=labels, y_pred=predicted_class)
+        print(predictions.shape, set(labels), set(predicted_class))
         report = classification_report(labels, predicted_class)
 
         result = {'eval_loss': eval_loss,
